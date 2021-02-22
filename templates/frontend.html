@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Streamer</title>
+</head>
+<body>
+
+<form>
+	<label for="urlInput">URL:</label><input type="text" id="urlInput"/>
+	<a id="submitControl" href="/">
+		Submit
+	</a>
+</form>
+
+<script>
+	function updateButton () {
+		document.getElementById('submitControl').ping = '/open/?url=' + document.getElementById('urlInput').value
+	}
+	document.getElementById('urlInput').onchange = updateButton;
+</script>
+</body>
+</html>
