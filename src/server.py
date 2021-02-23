@@ -18,15 +18,16 @@ class AppServer:
         self.user = os.environ.get("USER")
         self.proc = None
         self.app = os.environ.get('MIRROR_APPLICATION', 'chromium')
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        self.driver = webdriver.Chrome(options=chrome_options)
+        self.chrome_options = webdriver.ChromeOptions()
+        self.chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
         self.needs_recreate = False
+        self.driver = None
 
     def spawn_window(self, website: str = 'https://google.com') -> None:
         """ opens application window """
         if self.driver and self.needs_recreate:
-            self.driver.close()
+            self.driver.quit()
+        self.driver = webdriver.Chrome(options=self.chrome_options)
         self.driver.get(website)
         self.needs_recreate = True
         WebDriverWait(self.driver, 5).until(element_to_be_clickable((By.CLASS_NAME, 'edge-placeholder-button'))).click()
