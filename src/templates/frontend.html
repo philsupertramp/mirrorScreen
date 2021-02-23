@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Streamer</title>
+</head>
+<body>
+<style>
+	.flex-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+</style>
+<div class="flex-container">
+	<div>
+		Submit URL:
+		<form>
+			<label for="urlInput">URL:</label><input type="text" onchange="updateButton(this.value)" id="urlInput"/>
+		</form>
+	</div>
+	<div>
+		Selection:
+		<form>
+			{% for url_list in context.urls %}
+				{% if url_list.depth == 1 %}
+					<label>
+						{{ url_list.name }}
+						<select onchange="updateButton(this.value)">
+						{% for name, url in url_list.links.items() %}
+							<option value="{{ url }}">{{ name }}</option>
+						{% endfor %}
+						</select>
+					</label>
+				{% elif url_list.depth == 2 %}
+					{# seasons #}
+					{% for name, seasons in url_list.followed_links.items() %}
+						<label>
+							{{ name }}
+							<select onchange="updateButton(this.value)">
+								{% for key, val in seasons.items() %}
+									<option value="{{ val }}">{{ key }}</option>
+								{% endfor %}
+							</select>
+						</label>
+					{% endfor %}
+					{# episodes #}
+				{% endif %}
+			{% endfor %}
+		</form>
+	</div>
+	<div>
+		<a id="submitControl" href="/">
+			Submit
+		</a>
+	</div>
+</div>
+
+<script>
+	function updateButton (value) {
+		document.getElementById('submitControl').ping = '/open/?url=' + value
+	}
+</script>
+</body>
+</html>
