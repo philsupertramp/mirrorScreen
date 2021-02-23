@@ -24,9 +24,9 @@
 		Selection:
 		<form>
 			{% for url_list in context.urls %}
+				<h1 class="title">{{ url_list.name }}</h1>
 				{% if url_list.depth == 1 %}
 					<label>
-						{{ url_list.name }}
 						<select onchange="updateButton(this.value)">
 						{% for name, url in url_list.links.items() %}
 							<option value="{{ url }}">{{ name }}</option>
@@ -36,17 +36,21 @@
 				{% elif url_list.depth == 2 %}
 					{# seasons #}
 					{% for name, seasons in url_list.followed_links.items() %}
-						<label>
-							{{ name }}
-							<select onchange="updateButton(this.value)">
-								{% for key, val in seasons.items() %}
-									<option value="{{ val }}">{{ key }}</option>
-								{% endfor %}
-							</select>
-						</label>
+						<div>
+							<label>
+								{{ name }}
+								<select onchange="updateButton(this.value)">
+									<option value="---" selected></option>
+									{% for key, val in seasons.items() %}
+										<option value="{{ val }}">{{ key }}</option>
+									{% endfor %}
+								</select>
+							</label>
+						</div>
 					{% endfor %}
 					{# episodes #}
 				{% endif %}
+				<hr></hr>
 			{% endfor %}
 		</form>
 	</div>

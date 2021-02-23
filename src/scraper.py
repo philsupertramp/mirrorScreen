@@ -1,5 +1,6 @@
 import json
 import os
+from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Dict, List
 from urllib.parse import urlparse
@@ -76,6 +77,9 @@ class Page:
                         self.followed_links[name].update(
                             {header.string: self.get_url(anchor.get('href'))}
                         )
+
+        self.links = {i: self.links[i] for i in reversed(self.links)}
+        self.followed_links = {i: self.followed_links[i] for i in reversed(self.followed_links)}
 
     def get_url(self, sub):
         if self.domain.endswith('/') or sub.startswith('/'):
