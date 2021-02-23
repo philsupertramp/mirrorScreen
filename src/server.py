@@ -4,6 +4,8 @@ from typing import Tuple
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class AppServer:
@@ -16,7 +18,9 @@ class AppServer:
         self.user = os.environ.get("USER")
         self.proc = None
         self.app = os.environ.get('MIRROR_APPLICATION', 'chromium')
-        self.driver = webdriver.Chrome()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_experimental_option("excludeSwitches", ['enable-automation'])
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.needs_recreate = False
 
     def spawn_window(self, website: str = 'https://google.com') -> None:
@@ -25,9 +29,8 @@ class AppServer:
             self.driver.close()
         self.driver.get(website)
         self.needs_recreate = True
-        self.driver.implicitly_wait(5)
-        self.driver.find_element(By.CLASS_NAME, 'edge-placeholder-button').click()
-        self.driver.find_element(By.CLASS_NAME, 'edge-gui-fullscreen-button').click()
+        WebDriverWait(self.driver, 5).until(element_to_be_clickable((By.CLASS_NAME, 'edge-placeholder-button'))).click()
+        WebDriverWait(self.driver, 15).until(element_to_be_clickable((By.CLASS_NAME, 'edge-gui-fullscreen-button'))).click()
 
     def fetch(self):
         """ reloads list of current running processes """

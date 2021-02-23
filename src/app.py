@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from main import scraper
+from scraper import scraper
 from server import server
 
 app = Flask(__name__)
